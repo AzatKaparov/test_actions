@@ -3,32 +3,30 @@
 
 name: Python application
 
-on:
+on: # это описание события, по которому будет запускаться наш скрипт.
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+    # эта часть кода отвечает за запуск workflow при каждом пуше и пуле
 jobs:
-  build:
+  build: # построение проекта
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # на какой ОС запускать
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    steps: 
+    - uses: actions/checkout@v2 # позволяет переиспользовать другие экшены
+    - name: Set up Python 3.8 # название "шага" (этапа) работы. 
       uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
+      with: # При помощи with мы можем указать параметры с которыми запускаем действие,
+        python-version: 3.8 # "Используя python3.8 сделай следующее
     - name: Install dependencies
-      run: |
+      run: | # запускай/выполни
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install django==3
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi # можно так же задавать условия
     - name: Lint with flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
